@@ -1,18 +1,18 @@
 name:                EarlyAnnPlugin
 version:             0.1.0.0
-github:              "githubuser/EarlyAnnPlugin"
+github:              "m0ar/ghc-early-annotations-plugin"
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2018 Author name here"
+author:              "Edvard Hübinette"
+maintainer:          "edvard@hubinette.me"
+copyright:           "2018 Edvard Hübinette"
 
 extra-source-files:
 - README.md
 - ChangeLog.md
 
 # Metadata used when publishing your package
-# synopsis:            Short description of your package
-# category:            Web
+# synopsis:            Gets ANN pragma content efter parsing
+# category:            Compiler extension
 
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
