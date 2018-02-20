@@ -4,9 +4,9 @@ import GhcPlugins
 
 plugin :: Plugin
 plugin = defaultPlugin {
-    parsedResultAction = parsedResultAction
+    parsedResultAction = prepareWeights
   }
 
-parsedResultAction :: [CommandLineOption] -> ModSummary -> HsParsedModule
+prepareWeights :: [CommandLineOption] -> ModSummary -> HsParsedModule
                    -> Hsc HsParsedModule
-parsedResultAction _ _ = return . id
+prepareWeights _ _ = return
