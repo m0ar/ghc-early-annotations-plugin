@@ -6,9 +6,12 @@ import HsSyn (hsmodDecls)
 import HsExpr (HsExpr(..))
 import HsExtension (IdP(..), GhcPs)
 
+-- | A compiler plugin must export a value of this type. We take an "identity"
+-- plugin ('defaultPlugin'), and replace the 'parsedResultAction' field with our
+-- implementation: 'prepareAnnotations'.
 plugin :: Plugin
 plugin = defaultPlugin {
-    parsedResultAction = prepareWeights
+    parsedResultAction = prepareAnnotations
   }
 
 -- | Extracts binders with payload from 'ANN' pragmas through 'HsParsedModule'
@@ -17,9 +20,9 @@ plugin = defaultPlugin {
 --
 -- Note: if TcGblEnv is deemed unfit for this job, we need to find another way
 -- to stash the 'ANN' binders and associated payload.
-prepareWeights :: [CommandLineOption] -> ModSummary -> HsParsedModule
+prepareAnnotations :: [CommandLineOption] -> ModSummary -> HsParsedModule
                    -> Hsc HsParsedModule
-prepareWeights _ _ = return
+prepareAnnotations _ _ = return
 
 type StrippedAnnD = (AnnProvenance RdrName, HsExpr GhcPs)
 
