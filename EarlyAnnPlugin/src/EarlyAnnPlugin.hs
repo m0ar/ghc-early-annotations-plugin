@@ -5,6 +5,9 @@ module EarlyAnnPlugin (plugin) where
   import HsSyn (hsmodDecls)
   import HsExpr (HsExpr(..))
   import HsExtension (IdP(..), GhcPs)
+  import TcRnMonad (getTopEnv, updTopEnv)
+  import HscTypes (hpm_ann_from_parser)
+  import System.IO.Unsafe (unsafePerformIO)
   
   -- | A compiler plugin must export a value of this type. We
   -- take an "identity" plugin ('defaultPlugin'), and replace
@@ -12,7 +15,7 @@ module EarlyAnnPlugin (plugin) where
   -- 'prepareAnnotations'.
   plugin :: Plugin
   plugin = defaultPlugin {
-      parsedResultAction = prepareAnnotations
+      parsedResultAction = slurpTopLvlAnn
     }
   
   -- | Extracts binders with payload from 'ANN' pragmas through
@@ -23,10 +26,11 @@ module EarlyAnnPlugin (plugin) where
   -- Note: if TcGblEnv is deemed unfit for this job, we need to
   -- find another way to stash the 'ANN' binders and associated
   -- payload.
-  prepareAnnotations :: [CommandLineOption] -> ModSummary
-                     -> HsParsedModule -> Hsc HsParsedModule
-  prepareAnnotations _ _ = return
-  
+  slurpTopLvlAnn :: [CommandLineOption] -> ModSummary
+                 -> HsParsedModule -> Hsc HsParsedModule
+  slurpTopLvlAnn _ _ hpm = let annDecls = findAnnDecls hpm in
+    return $ hpm { hpm_ann_from_parser = annDecls }
+
   type StrippedAnnD = (AnnProvenance RdrName, HsExpr GhcPs)
   
   -- | Traverses the top level declarations in the module, finds
